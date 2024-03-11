@@ -18,29 +18,29 @@ const viewselected = ref(transactionViewOptions[0]);
 			color="green"
 			title="Income"
 			:amount="4000"
-			last-amount="3000"
+			:last-amount="2000"
 			:loading="false"
 		/>
 		<Trend
 			color="red"
-			title="Income"
+			title="Expense"
 			:amount="4000"
-			last-amount="3000"
-			:loading="false"
-		/>
-		<Trend
-			color="green"
-			title="Income"
-			:amount="4000"
-			last-amount="3000"
+			:last-amount="44000"
 			:loading="false"
 		/>
 		<Trend
 			color="red"
-			title="Income"
+			title="Investments"
 			:amount="4000"
-			last-amount="3000"
-			:loading="true"
+			:last-amount="33000"
+			:loading="false"
+		/>
+		<Trend
+			color="red"
+			title="Savings"
+			:amount="4000"
+			:last-amount="3000"
+			:loading="false"
 		/>
 	</section>
 </template>
