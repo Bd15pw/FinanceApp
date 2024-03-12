@@ -1,5 +1,8 @@
 <script setup>
-const { currency } = useCurrency(3000);
+const props = defineProps({
+	transaction: Object,
+});
+const { currency } = useCurrency(props.transaction.amount);
 const items = [
 	[
 		{
@@ -25,10 +28,12 @@ const items = [
 					name="i-heroicons-arrow-trending-up-16-solid"
 					class="text-green-600"
 				/>
-				<div>test</div>
+				<div>{{ transaction.description }}</div>
 			</div>
 			<div>
-				<UBadge color="cyan" variant="subtle"> Category</UBadge>
+				<UBadge color="cyan" variant="subtle" v-if="transaction.category">
+					{{ transaction.category }}</UBadge
+				>
 			</div>
 		</div>
 		<div class="flex items-center justify-end space-x-2">
