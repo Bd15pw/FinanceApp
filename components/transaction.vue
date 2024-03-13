@@ -2,6 +2,21 @@
 const props = defineProps({
 	transaction: Object,
 });
+
+const isIncome = computed(() => props.transaction.type === "Income");
+
+// ikona na wydatki lub przychody
+
+const icon = computed(() =>
+	isIncome.value
+		? "i-heroicons-arrow-trending-up"
+		: "i-heroicons-arrow-trending-down"
+);
+
+const iconColor = computed(() =>
+	isIncome.value ? "text-green-600" : "text-red-600"
+);
+
 const { currency } = useCurrency(props.transaction.amount);
 const items = [
 	[
@@ -24,10 +39,7 @@ const items = [
 	>
 		<div class="flex items-center justify-between">
 			<div class="flex items-center justify-between space-x-2">
-				<UIcon
-					name="i-heroicons-arrow-trending-up-16-solid"
-					class="text-green-600"
-				/>
+				<UIcon :name="icon" :class="iconColor" />
 				<div>{{ transaction.description }}</div>
 			</div>
 			<div>

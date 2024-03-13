@@ -14,6 +14,24 @@ const { data, pending } = await useAsyncData("transaction", async () => {
 	return data;
 });
 transactions.value = data.value;
+
+//grupowanie tranzakcji po dacie
+
+const transactionGroupedByDate = computed(() => {
+	let grouped = {};
+
+	for (const transaction of transactions.value) {
+		const date = new Date(transaction.created_at).toISOString().split("T")[0];
+
+		if (!grouped[date]) {
+			grouped[date] = [];
+		}
+
+		grouped[date].push(transaction);
+	}
+
+	return grouped;
+});
 </script>
 
 <template>
