@@ -32,6 +32,8 @@ const transactionGroupedByDate = computed(() => {
 
 	return grouped;
 });
+
+const names = [];
 </script>
 
 <template>
