@@ -77,10 +77,17 @@ const names = [];
 	</section>
 
 	<section>
-		<Transaction
-			v-for="transaction in transactions"
-			:key="transaction.id"
-			:transaction="transaction"
-		/>
+		<div
+			v-for="(transactionsOnDay, date) in transactionGroupedByDate"
+			:key="date"
+			class="mb-10"
+		>
+			<DailyTransaction :date="date" :transactions="transactionsOnDay" />
+			<Transaction
+				v-for="transaction in transactionsOnDay"
+				:key="transaction.id"
+				:transaction="transaction"
+			/>
+		</div>
 	</section>
 </template>
