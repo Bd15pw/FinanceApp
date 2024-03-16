@@ -6,14 +6,28 @@ const viewselected = ref(transactionViewOptions[0]);
 const supabase = useSupabaseClient();
 
 const transactions = ref([]);
+const isLoading = ref(false);
 
-const { data, pending } = await useAsyncData("transaction", async () => {
-	const { data, error } = await supabase.from("transaction").select();
+const fetchTransactions = async () => {
+	isLoading.value = true;
+	try {
+		const { data } = await useAsyncData("transaction", async () => {
+			const { data, error } = await supabase.from("transaction").select();
 
-	if (error) return [];
-	return data;
-});
-transactions.value = data.value;
+			if (error) return [];
+			return data;
+		});
+
+		return data.value;
+	} finally {
+		isLoading.value = false;
+	}
+};
+
+const refreshTransaction = async () =>
+	(transactions.value = await fetchTransactions());
+
+await refreshTransaction();
 
 //grupowanie tranzakcji po dacie
 
@@ -51,32 +65,32 @@ const names = [];
 			title="Income"
 			:amount="4000"
 			:last-amount="2000"
-			:loading="false"
+			:loading="isLoading"
 		/>
 		<Trend
 			color="red"
 			title="Expense"
 			:amount="4000"
 			:last-amount="44000"
-			:loading="false"
+			:loading="isLoading"
 		/>
 		<Trend
 			color="red"
 			title="Investments"
 			:amount="4000"
 			:last-amount="33000"
-			:loading="false"
+			:loading="isLoading"
 		/>
 		<Trend
 			color="red"
 			title="Savings"
 			:amount="4000"
 			:last-amount="3000"
-			:loading="false"
+			:loading="isLoading"
 		/>
 	</section>
 
-	<section>
+	<section v-if="!isLoading">
 		<div
 			v-for="(transactionsOnDay, date) in transactionGroupedByDate"
 			:key="date"
@@ -87,7 +101,11 @@ const names = [];
 				v-for="transaction in transactionsOnDay"
 				:key="transaction.id"
 				:transaction="transaction"
+				@deleted="refreshTransaction()"
 			/>
 		</div>
+	</section>
+	<section v-else>
+		<USkeleton class="h-8 w-full xmb-2" v-for="i in 4" :key="i" />
 	</section>
 </template>
