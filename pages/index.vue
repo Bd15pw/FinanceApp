@@ -8,6 +8,7 @@ const supabase = useSupabaseClient();
 const transactions = ref([]);
 const isLoading = ref(false);
 
+// pobieranie tranzakcji z supabase
 const fetchTransactions = async () => {
 	isLoading.value = true;
 	try {
@@ -47,7 +48,26 @@ const transactionGroupedByDate = computed(() => {
 	return grouped;
 });
 
-const names = [];
+// Zliczanie wydatków i przychodów
+
+const income = computed(() =>
+	transactions.value.filter((t) => t.type === "Income")
+);
+
+const expense = computed(() =>
+	transactions.value.filter((t) => t.type === "Expense")
+);
+
+const incomeCount = computed(() => income.value.length);
+const expenseCount = computed(() => expense.value.length);
+
+const incomeTotal = computed(() =>
+	income.value.reduce((sum, transaction) => sum + transaction.amount, 0)
+);
+
+const expenseTotal = computed(() =>
+	expense.value.reduce((sum, transaction) => sum + transaction.amount, 0)
+);
 </script>
 
 <template>
@@ -63,14 +83,14 @@ const names = [];
 		<Trend
 			color="green"
 			title="Income"
-			:amount="4000"
+			:amount="incomeTotal"
 			:last-amount="2000"
 			:loading="isLoading"
 		/>
 		<Trend
 			color="red"
 			title="Expense"
-			:amount="4000"
+			:amount="expenseTotal"
 			:last-amount="44000"
 			:loading="isLoading"
 		/>
@@ -88,6 +108,24 @@ const names = [];
 			:last-amount="3000"
 			:loading="isLoading"
 		/>
+	</section>
+
+	<section class="flex justify-between mb-10">
+		<div>
+			<h2 class="text-2xl font-extrabold">Transactions</h2>
+			<div class="text-gray-500 dark:text-gray-400">
+				You have {{ incomeCount }} incomes and {{ expenseCount }} expenses this
+				period
+			</div>
+		</div>
+		<div>
+			<UButton
+				icon="i-heroicons-plus-circle"
+				color="white"
+				variant="solid"
+				label="Add"
+			/>
+		</div>
 	</section>
 
 	<section v-if="!isLoading">
